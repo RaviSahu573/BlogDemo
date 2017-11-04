@@ -1,0 +1,25 @@
+
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/css/admin.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/js/admin.js') }}"></script>
+{% endblock %}
+
+{% block header_navigation_links %}
+    <li>
+        <a href="{{ path('admin_post_index') }}">
+             Post List
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('blog_index') }}">
+           Back To Blog
+        </a>
+    </li>
+{% endblock %}

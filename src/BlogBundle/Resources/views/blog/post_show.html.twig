@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'blog_post_show' %}
+
+{% block main %}
+    <h1>{{ post.title }}</h1>
+
+    <p class="post-metadata">
+        <span class="metadata"><i class="fa fa-calendar"></i> {{ post.publishedAt|localizeddate('long', 'medium', null, 'UTC') }}</span>
+        <span class="metadata"><i class="fa fa-user"></i> {{ post.author.fullName }}</span>
+    </p>
+
+    {{ post.content }}
+
+    
+
+    <div id="post-add-comment" class="well">
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            {{ render(controller('BlogBundle:Blog:commentForm', {'id': post.id})) }}
+        {% else %}
+            <p>
+                <a class="btn btn-success" href="{{ path('security_login') }}">
+                    <i class="fa fa-sign-in" aria-hidden="true"></i> {{ 'SignIn' }}
+                </a>
+               Post Comment
+            </p>
+        {% endif %}
+    </div>
+
+    <h3>
+        <i class="fa fa-comments" aria-hidden="true"></i> {{ 'Comments'|transchoice(post.comments|length) }}
+    </h3>
+
+    {% for comment in post.comments %}
+        <div class="row post-comment">
+            <a name="comment_{{ comment.id }}"></a>
+            <h4 class="col-sm-3">
+                <strong>{{ comment.author.fullName }}</strong> 
+                <strong>{{ comment.publishedAt|localizeddate('medium', 'short', null, 'UTC') }}</strong>
+            </h4>
+            <div class="col-sm-9">
+                {{ comment.content }}
+            </div>
+        </div>
+    {% else %}
+        <div class="post-comment">
+            <p>No Comments</p>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block sidebar %}
+    {% if is_granted('edit', post) %}
+        <div class="section">
+            <a class="btn btn-lg btn-block btn-success" href="{{ path('admin_post_edit', {id: post.id}) }}">
+                 Edit Post
+            </a>
+        </div>
+    {% endif %}
+
+    {{ parent() }}
+
+    
+    
+{% endblock %}
